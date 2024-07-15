@@ -3,11 +3,12 @@ package com.example.cmd.service;
 import com.example.cmd.model.Action;
 import com.example.cmd.repository.ActionRepository;
 import jakarta.annotation.PostConstruct;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
-@Data
-//@Service
+@AllArgsConstructor
+@Service
 public class ActionServiceImpl implements ActionService {
     ActionRepository actionRepository;
 

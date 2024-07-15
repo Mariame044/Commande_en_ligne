@@ -6,7 +6,9 @@ import com.example.cmd.model.Utilisateur;
 import java.util.List;
 
 public interface HistoriqueService {
-    Historique createHistorique(Historique historique);
+    Historique addCREATIONhistorique(Utilisateur utilisateur, String description);
+    Historique addMODIFICATIONhistorique(Utilisateur utilisateur, String description);
+    Historique addSUPPRESSIONhistorique(Utilisateur utilisateur, String description);
     List<Historique> voirToutesHistoriques();
     List<Historique> voirToutesHistoriquesPar(Utilisateur utilisateur);
 }

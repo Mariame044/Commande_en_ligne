@@ -18,7 +18,7 @@ public class Produit {
     private Long id;
     private String description;
     private Float prix;
-    private Float quantite;
+    private int quantite;
     LocalDate date = LocalDate.now();
 
     @ManyToOne
@@ -30,7 +30,7 @@ public class Produit {
 
 
 
-    public Produit(String description, Categorie categorie, Float prix, Float quantite, Utilisateur utilisateur) {
+    public Produit(String description, Categorie categorie, Float prix, int quantite, Utilisateur utilisateur) {
         this.description = description;
         this.categorie = categorie;
         this.prix = prix;

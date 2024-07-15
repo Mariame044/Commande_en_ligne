@@ -25,14 +25,9 @@ public class SecurityConfig {
                         .requestMatchers("/client/**").hasRole("CLIENT")
                         .anyRequest().permitAll()
                 )
-
                 .httpBasic(withDefaults());
-
         return http.build();
     }
-
-
-
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {

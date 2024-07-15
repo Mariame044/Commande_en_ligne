@@ -23,6 +23,8 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     private final UtilisateurRepository utilisateurRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final ProduitRepository produitRepository;
+    private final HistoriqueServiceImpl historiqueService;
+    private  final StockServiceImpl stockService;
 
 
     /**
@@ -96,7 +98,9 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     @Transactional
     @Override
     public String ajouterProduit(Produit produit) {
-        produitRepository.save(produit);
+        Produit p = produitRepository.save(produit);
+        this.stockService.ajouterProduit(p);
+        this.historiqueService.addCREATIONhistorique(p.getUtilisateur(), "Produit(id:"+p.getId()+")");
         return "Produit ajouter avec succes!";
     }
 

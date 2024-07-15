@@ -11,6 +11,7 @@ import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -25,6 +26,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     private final ProduitRepository produitRepository;
     private final HistoriqueServiceImpl historiqueService;
     private  final StockServiceImpl stockService;
+    private EntreeSortiServiceImp entreeSortiServiceImp;
 
 
     /**
@@ -99,6 +101,13 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     @Override
     public String ajouterProduit(Produit produit) {
         Produit p = produitRepository.save(produit);
+        EntreeSorti es = new EntreeSorti();
+        es.setProduit(p);
+        es.setDate(new Date());
+        es.setLibelle("Entrée");
+        es.setQuantite(p.getQuantite());
+        this.entreeSortiServiceImp.creer(es);
+        this.stockService.ajouterProduit(p);
         this.stockService.ajouterProduit(p);
         this.historiqueService.addCREATIONhistorique(p.getUtilisateur(), "Produit(id:"+p.getId()+")");
         return "Produit ajouter avec succes!";

@@ -30,14 +30,7 @@ public class ProduitServiceImpl implements ProduitService {
     @Transactional
     @Override
     public String ajouterProduit(Produit produit) {
-        Produit p = produitRepository.save(produit);
-        EntreeSorti es = new EntreeSorti();
-        es.setProduit(p);
-        es.setDate(new Date());
-        es.setLibelle("Entrée");
-        es.setQuantite(p.getQuantite());
-        this.entreeSortiServiceImp.creer(es);
-        this.stockService.ajouterProduit(p);
+        produitRepository.save(produit);
         return "Produit ajouter avec succes!";
     }
 

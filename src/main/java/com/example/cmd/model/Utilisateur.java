@@ -24,6 +24,8 @@ public class Utilisateur {
     private String username;
     private String motDePasse;
 
+
+
     @ManyToOne
     @JoinColumn(name = "id_role")
     private RoleType roleType;
@@ -37,4 +39,6 @@ public class Utilisateur {
     public RoleType getRoleType() {
         return roleType;
     }
+
+
 }

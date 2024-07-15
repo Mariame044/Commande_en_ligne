@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -24,19 +25,10 @@ public class ClientController {
 
    private final UtilisateurService utilisateurService;
 
-    // Endpoint pour la création de compte client
-    @PostMapping("/creerCompte")
-    public ResponseEntity<String> creerCompteClient(@RequestBody Client client, Authentication authentication) {
-        // Vérifier si un utilisateur est déjà authentifié
-        if (authentication != null && authentication.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vous êtes déjà connecté en tant que " + authentication.getName() + ". Vous ne pouvez pas créer un autre compte.");
-        }
-
-        // Sinon, permettre la création de compte client
-        String message = utilisateurService.creerCompteClient(client);
-        return ResponseEntity.ok(message);
+    @PostMapping("/creerCompteClient")
+    public String creerCompteClient(@RequestBody Client client) {
+        return utilisateurService.creerCompteClient(client);
     }
-
     @PutMapping("/modifierMotDePasse")
     public ResponseEntity<String> modifierMotDePasse(@RequestBody Map<String, String> requestBody) {
         try {

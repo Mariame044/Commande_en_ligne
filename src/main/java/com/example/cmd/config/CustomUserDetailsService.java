@@ -1,7 +1,10 @@
 package com.example.cmd.config;
 
+import com.example.cmd.model.Client;
 import com.example.cmd.model.Utilisateur;
 import com.example.cmd.repository.UtilisateurRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,9 +18,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private final UtilisateurRepository utilisateurRepository;
 
+
+
     public CustomUserDetailsService(UtilisateurRepository utilisateurRepository) {
         this.utilisateurRepository = utilisateurRepository;
     }
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

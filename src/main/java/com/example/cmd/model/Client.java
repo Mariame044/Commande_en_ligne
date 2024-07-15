@@ -11,15 +11,7 @@ import lombok.Setter;
 @Data
 public class Client extends Utilisateur {
 
-    private boolean actif;
 
-    public boolean isActif() {
-        return actif;
-    }
-
-    public void setActif(boolean actif) {
-        this.actif = actif;
-    }
     public Client(String username, String motDePasse, RoleType roletype){
         super(username, motDePasse, roletype);
     }

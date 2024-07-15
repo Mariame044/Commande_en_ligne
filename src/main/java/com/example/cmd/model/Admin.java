@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
 
 
 @Getter
@@ -14,7 +15,8 @@ import lombok.Setter;
 @Entity
 
 public class Admin extends Utilisateur {
-
+    @OneToMany(mappedBy = "admin")
+    private Set<Personnel> personnel;
 
     public Admin() {}
 

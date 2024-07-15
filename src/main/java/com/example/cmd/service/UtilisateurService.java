@@ -37,9 +37,6 @@ List<Categorie> lireCategories();
 
 
 
-        String desactiverClient(Long clientId);
-        String desactiverPersonnel(Long personnelId);
-
 
 
         String ajouterRoleType(RoleType roleType);

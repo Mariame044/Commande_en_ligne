@@ -13,15 +13,10 @@ import lombok.Setter;
 @Data
 public class Personnel extends Utilisateur {
 
-    private boolean actif;
+    @ManyToOne
 
-    public boolean isActif() {
-        return actif;
-    }
+    private Admin admin;
 
-    public void setActif(boolean actif) {
-        this.actif = actif;
-    }
     public Personnel(String username, String motDePasse, RoleType roletype){
         super(username, motDePasse, roletype);
     }

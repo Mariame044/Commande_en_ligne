@@ -56,24 +56,12 @@ public class AdminController {
     }
 
     @PostMapping("/creerpersonnel")
-    public String ajouterPersonnel(@RequestBody Personnel personnel) {
-        return utilisateurService.ajouterPersonnel(personnel);
+    public ResponseEntity<String> ajouterPersonnel(@RequestBody Personnel personnel) {
+        String message = utilisateurService.ajouterPersonnel(personnel);
+        return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
 
 
-    // Endpoint pour désactiver un client par ID
-    @PutMapping("/clients/{clientId}/desactiver")
-    public ResponseEntity<String> desactiverClient(@PathVariable Long clientId) {
-        String message = utilisateurService.desactiverClient(clientId);
-        return ResponseEntity.ok(message);
-    }
-
-    // Endpoint pour désactiver un personnel par ID
-    @PutMapping("/personnels/{personnelId}/desactiver")
-    public ResponseEntity<String> desactiverPersonnel(@PathVariable Long personnelId) {
-        String message = utilisateurService.desactiverPersonnel(personnelId);
-        return ResponseEntity.ok(message);
-    }
 
 
     @PutMapping("/modifieradmin/{id}")

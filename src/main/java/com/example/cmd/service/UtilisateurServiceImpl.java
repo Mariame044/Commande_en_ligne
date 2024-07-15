@@ -19,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -48,6 +49,11 @@ public class UtilisateurServiceImpl implements UtilisateurService {
                     return "Role modifié avec succès!";
                 }).orElseThrow(() -> new RuntimeException("Role n'existe pas"));
     }
+
+
+
+
+
 
     @Override
     public String supprimerRoleType(Long id) {
@@ -87,42 +93,32 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         return categorieRepository.findAll();
     }
 
-    @Override
-    public String desactiverClient(Long clientId) {
-        Client client = (Client) utilisateurRepository.findById(clientId)
-                .orElseThrow(() -> new RuntimeException("Client non trouvé avec ID : " + clientId));
 
-        client.setActif(false); // Met à jour l'état actif à false
 
-        utilisateurRepository.save(client);
-
-        return "Client désactivé avec succès! Il ne peut plus se connecter.";
-    }
-
-    @Override
-    public String desactiverPersonnel(Long personnelId) {
-        Personnel personnel = (Personnel) utilisateurRepository.findById(personnelId)
-                .orElseThrow(() -> new RuntimeException("Personnel non trouvé avec ID : " + personnelId));
-
-        personnel.setActif(false); // Met à jour l'état actif à false
-
-        utilisateurRepository.save(personnel);
-
-        return "Personnel désactivé avec succès! Il ne peut plus se connecter.";
-    }
 
     @Override
     public String ajouterPersonnel(Personnel personnel) {
+        // Récupérer les détails de l'administrateur actuellement authentifié
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String adminUsername = authentication.getName();
+
+        // Rechercher l'administrateur dans la base de données par son nom d'utilisateur
+        Utilisateur admin = utilisateurRepository.findByUsername(adminUsername)
+                .orElseThrow(() -> new RuntimeException("Administrateur non trouvé avec le nom d'utilisateur : " + adminUsername));
+
         // Vérifier si le rôle PERSONNEL existe, sinon le créer
         try {
             RoleType personnelRole = roleRepository.findByNom("PERSONNEL")
                     .orElseGet(() -> roleRepository.save(new RoleType("PERSONNEL")));
             personnel.setRoleType(personnelRole);
             personnel.setMotDePasse(passwordEncoder.encode(personnel.getMotDePasse()));
-            utilisateurRepository.save(personnel);
-            return "Nouveau formateur ajouté avec succès!";
 
-        }catch (Exception e) {
+            // Définir l'administrateur qui ajoute le personnel
+            personnel.setAdmin((Admin) admin);
+
+            utilisateurRepository.save(personnel);
+            return "Nouveau personnel ajouté avec succès!";
+        } catch (Exception e) {
             // Gérer les erreurs en cas de problème lors de l'ajout
             return "Erreur lors de l'ajout du personnel : " + e.getMessage();
         }
@@ -158,14 +154,25 @@ public class UtilisateurServiceImpl implements UtilisateurService {
             return "Vous êtes déjà connecté en tant que " + authentication.getName() + ". Vous ne pouvez pas créer un autre compte.";
         }
 
-        // Implémentez la logique pour créer un compte client ici
-        // Exemple : enregistrer le client dans la base de données, etc.
-        // clientService.save(client);
+        try {
+            // Implémentez la logique pour créer un compte client ici
+            // Vérifier si le rôle CLIENT existe, sinon le créer
+            RoleType clientRole = roleRepository.findByNom("CLIENT")
+                    .orElseGet(() -> roleRepository.save(new RoleType("CLIENT")));
+            client.setRoleType(clientRole);
 
-        return "Compte client créé avec succès pour " + client.getUsername();
+            // Encoder le mot de passe avant de l'enregistrer
+            client.setMotDePasse(passwordEncoder.encode(client.getMotDePasse()));
+
+            // Sauvegarder le client dans la base de données
+            utilisateurRepository.save(client);
+
+            return "Compte client créé avec succès pour " + client.getUsername();
+        } catch (Exception e) {
+            // Gérer les erreurs en cas de problème lors de la création du compte client
+            return "Erreur lors de la création du compte client : " + e.getMessage();
+        }
     }
-
-
     @Override
     public String ajouterAdmin(Admin admin) {
         // Vérifier si le rôle ADMIN existe, sinon le créer
